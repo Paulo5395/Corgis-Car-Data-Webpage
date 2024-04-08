@@ -6,5 +6,89 @@
 
 {% block content %}
     <!--page content-->
-    <h1>Home Page</h1>
+    <div class="row">
+        <div class="col-sm-8 offset-1">
+            <h1>Home</h1>
+
+            <h2>Gas Mileage</h3>
+
+            <p>Gas mileage is measured by taking a set amount of miles traveled divided by the amount of fuel it took to refuel that vehicle. 
+                Usually, these numbers are different during highway and city driving due to a couple factors. 
+
+                <br>
+
+                <a href="https://www.caranddriver.com/research/a31518112/what-is-good-gas-milage/" target="_blank">(Car and Driver)</a>
+            </p>
+
+            <h3>Energy Loss</h3>
+
+            <p>One factor is that when a car is city driving it is constantly starting and stopping. 
+                This makes the energy of the car go from kinetic to potential energy. 
+                Every energy transfer the car loses energy as heat causing it to use more fuel than if it were driving for long periods of time, 
+                like on the highway.
+
+                <br>
+
+                <a href="https://www.scottsfortcollinsauto.com/the-gas-mileage-difference-between-city-and-highway-driving/" target="_blank">(Scotts Fort Collins Auto)</a>
+            </p>
+
+            <h3>Manual V Automatic</h3>
+
+            <p>Another factor that applies to gas mileage is whether the car is automatic or manual. In the past manuals would get better gas mileage. 
+                In the past few decades however automatics have become more efficient and often surpass manuals in gas mileage.
+
+                <br>
+
+                <a href="https://www.energy.gov/eere/vehicles/articles/fotw-1127-march-30-2020-model-year-2016-automatic-transmissions-have" target="_blank">(EERE)</a>
+            </p>
+            
+
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item w-50 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                            Accordion
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            Yap here
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item w-50 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                            Accordion
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            Yap here
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item w-50 mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                            Accordion
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            Yap here
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 {% endblock %}
