@@ -6,11 +6,11 @@ import json
 
 app = Flask(__name__) #__name__ = "__main__" if this is the file that was run.  Otherwise, it is the name of the file (ex. webapp)
 
-@app.route("/")
-def render_main():
-    return render_template('home.html')
+# @app.route("/")
+# def render_main():
+#     return render_template('home.html')
 
-@app.route("/p1")
+@app.route("/")
 def render_page1():
     cyl_count = get_num_cyl()
 
@@ -25,46 +25,67 @@ def render_page1():
     num_10_cyl = cyl_count["num_10_cyl"]
     num_12_cyl = cyl_count["num_12_cyl"]
 
-    engines = get_engines_options()
-    engine = request.args.get('engine')
+    cars = get_car_options()
+    car = request.args.get('car')
 
-    if 'engine' in request.args:
-        data = engine_mileage(engine)
+    if 'car' in request.args:
+        engine_mileage = get_engine_mileage(car)
+        engine_info = get_engine_info(car)
 
-        display_city_data = "City mpg " + str(data[0])
-        display_highway_data = "Highway mpg: " + str(data[1])
+        city_mpg = "City mpg: " + str(engine_mileage[0])
+        highway_mpg = "Highway mpg: " + str(engine_mileage[1])
 
-        print(avg_mpg_by_brand)
+        return render_template('home.html', last_selected = car, car_options = cars, 
+                                city_mpg = city_mpg, highway_mpg = highway_mpg, 
+                                avg_mpg_by_brand = avg_mpg_by_brand, engine_info = engine_info,
+                                num_4_cyl = num_4_cyl, num_5_cyl = num_5_cyl, 
+                                num_6_cyl = num_6_cyl, num_8_cyl = num_8_cyl, 
+                                num_10_cyl = num_10_cyl, num_12_cyl = num_12_cyl)
 
-        return render_template('page1.html', last_selected = engine, engine_options = engines, city_data = display_city_data, highway_data = display_highway_data, brands = brands, num_4_cyl = num_4_cyl, num_5_cyl = num_5_cyl, num_6_cyl = num_6_cyl, num_8_cyl = num_8_cyl, num_10_cyl = num_10_cyl, num_12_cyl = num_12_cyl)
+    return render_template('home.html', car_options = cars,
+                             avg_mpg_by_brand = avg_mpg_by_brand, 
+                             num_4_cyl = num_4_cyl, num_5_cyl = num_5_cyl, 
+                             num_6_cyl = num_6_cyl, num_8_cyl = num_8_cyl, 
+                             num_10_cyl = num_10_cyl, num_12_cyl = num_12_cyl)
 
-    return render_template('page1.html', engine_options = engines, num_4_cyl = num_4_cyl, num_5_cyl = num_5_cyl, num_6_cyl = num_6_cyl, num_8_cyl = num_8_cyl, num_10_cyl = num_10_cyl, num_12_cyl = num_12_cyl)
+#-------------------------- Retreving json Data ---------------------------------------------------
 
-#-------------------------- json Data ---------------------------------------------------
+def get_engine_info(car):
+    with open('./static/cars.json') as brand_data:
+        car_data = json.load(brand_data)
 
-def get_engines_options():
-    with open('./static/cars.json') as engines_data:
-        cars = json.load(engines_data)
-    engines =[]
+    engine_info = ""
 
-    for e in cars:
-        if e["Engine Information"]["Engine Type"] not in engines:
-            engines.append(e["Engine Information"]["Engine Type"])
-            engines.sort()
+    for car_sel in car_data:
+
+        if car_sel["Identification"]["ID"] == car:
+            engine_info = car_sel["Engine Information"]["Engine Type"]
+
+    return engine_info
+
+def get_car_options():
+    with open('./static/cars.json') as json_data:
+        car_data = json.load(json_data)
+    cars =[]
+
+    for car in car_data:
+        if car["Identification"]["ID"] not in cars:
+            cars.append(car["Identification"]["ID"])
+            cars.sort()
     options =""
 
-    for engine in engines:
-        options += Markup("<option value\"" + engine + "\">" + engine + "</options>")
+    for car in cars:
+        options += Markup("<option value\"" + car + "\">" + car + "</options>")
     return options
 
-def engine_mileage(engine):
+def get_engine_mileage(car):
     with open('./static/cars.json') as mileage_data:
         cars = json.load(mileage_data)
     city_mileage = 0
     highway_mileage = 0
 
     for e in cars:
-        if e["Engine Information"]["Engine Type"] == engine:
+        if e["Identification"]["ID"] == car:
             city_mileage = e["Fuel Information"]["City mpg"]
             highway_mileage = e["Fuel Information"]["Highway mpg"]
     return[city_mileage, highway_mileage]
@@ -126,18 +147,22 @@ def get_avg_mpg_of_brands(brands):
         car_count = 0;
         avg_brand_mpg = {}
 
+        for brand in brands:
+            avg_brand_mpg[brand] = {"Brand": brand,
+                                    "Car Count": 0,
+                                    "Total MPG": 0,
+                                    "Average MPG": 0}
+
         for x in cars:
 
-            if x["Identification"]["Make"] not in avg_brand_mpg:
-                avg_brand_mpg[x["Identification"]["Make"]] = 1 # (x["Fuel Information"]["City mpg"] + x["Fuel Information"]["Highway mpg"])
-
-            elif x["Identification"]["Make"] in avg_brand_mpg:
-                avg_brand_mpg[x["Identification"]["Make"]] += 1
-
+            if x["Identification"]["Make"] in avg_brand_mpg:
+                avg_brand_mpg[x["Identification"]["Make"]]["Car Count"] += 1
+                avg_brand_mpg[x["Identification"]["Make"]]["Total MPG"] += (x["Fuel Information"]["City mpg"] + x["Fuel Information"]["Highway mpg"]) / 2
+                avg_brand_mpg[x["Identification"]["Make"]]["Average MPG"] = round(avg_brand_mpg[x["Identification"]["Make"]]["Total MPG"] / avg_brand_mpg[x["Identification"]["Make"]]["Car Count"])
 
         return avg_brand_mpg
 
 
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=False)

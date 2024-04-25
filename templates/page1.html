@@ -8,43 +8,82 @@
     <!--page content-->
 
     <div class="row">
+      <div class="col offset-1">
+        <h1>How Engines Affect Gas Mileage</h1>
+      </div>
+    </div>
+
+    <div class="row">
         <div class="col-sm-10 offset-1">
-            <h1>How Engines Affect Gas Mileage</h1>
 
-            <h3>Select an Engine and learn about it</h3>
+          <div class="row border border-2 border-dark rounded pt-2">
+            <div class="col-6">
+                <h3>Select a Car and learn about it</h3>
 
-            <form class="mb-3" action="/p1">
-                <div class="row">
-                    <div class="col">
-                        <select class="form-select w-50" name="engine" onchange='if(this.value != 0) { this.form.submit(); }'>
-                            {% if last_selected %}
-                                <option slected>{{ last_selected }}</option>
+                <form class="mb-3" action="/p1">
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-select w-75" name="car" onchange='if(this.value != 0) { this.form.submit(); }'>
+                                {% if last_selected %}
+                                    <option slected>{{ last_selected }}</option>
 
-                            {% else %}
-                                <option selected>--< select an engine >--</option>
-                            {% endif %}
+                                {% else %}
+                                    <option selected>--< select an engine >--</option>
+                                {% endif %}
 
-                            {{ engine_options }}
-                        </select>
+                                {{ car_options }}
+                            </select>
+                        </div>
                     </div>
+                </form>
+
+                <div class="ms-1 mb-2">
+                    <h3>Engine MPG Specifications:</h3>
+
+                    {% if last_selected %}
+                      <p>Engine: {{ engine_info }}</p>
+                      <p>{{ city_mpg }}</p>
+                      <p>{{ highway_mpg }}</p>
+
+                    {% else %}
+                      <p><em>please select an engine</em></p>
+                    {% endif %}
                 </div>
-            </form>
-
-            <div class="ms-1 mb-2 w-75">
-                <h3>Engine MPG Specifications:</h3>
-
-                {% if last_selected %}
-                  <p>{{ city_data }}</p>
-                  <p>{{ highway_data }}</p>
-
-                {% else %}
-                  <p><em>please select an engine</em></p>
-                {% endif %}
             </div>
+
+            <!-- Average MPG Per Brand Table -->
+
+            <div class="col-6">
+              <h3>Brands and their Average MPG</h3>
+
+              <div class="table-responsive">
+                <table class="table table-hover table-striped table-responsive">
+                  <thead>
+                    <tr>
+                      <th>Brand</th>
+                      <th>Average MPG</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {% for brand in avg_mpg_by_brand %}
+                      <tr>
+                        <td>{{avg_mpg_by_brand[brand]["Brand"]}}</td>
+                        <td>{{avg_mpg_by_brand[brand]["Average MPG"]}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+              
 
             <!--Table-->
 
-            <table class="table table-hover w-50">
+            <table class="table table-hover">
                 <thead>
                   <tr>
                     <th>Engine</th>
@@ -78,27 +117,6 @@
                   </tr>
                 </tbody>
               </table>
-
-              <!-- Brand with best MPG -->
-
-              <table class="table table-hover w-50">
-                <thead>
-                  <tr>
-                    <th>Brand</th>
-                    <th>Average MPG</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {% for brand in brands %}
-                    <tr>
-                      <td>{{brand}}</td>
-                      <td>MPG goes here</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-
-        </div>
-    </div>
+            </div>
+          </div>
 {% endblock %}
